@@ -6,18 +6,12 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== "admin") {
     exit();
 }
 
+require_once __DIR__ . '../database/db.php';
 include '../includes/header.php';
-
-$mysqli = new mysqli("localhost", "root", "", "moduleconnexion");
-
-if ($mysqli->connect_errno) {
-    die("Échec de la connexion MySQL: " . $mysqli->connect_error);
-}
 
 $sql = "SELECT id, login, prenom, nom FROM utilisateurs";
 $result = $mysqli->query($sql);
 ?>
-
 <section class="flex justify-center items-center min-h-[70vh]">
     <div class="w-full max-w-5xl bg-white p-8 rounded-2xl shadow-lg">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Administration - Liste des utilisateurs</h1>
@@ -46,10 +40,7 @@ $result = $mysqli->query($sql);
         </div>
     </div>
 </section>
-
 <?php
 $result->free();
-$mysqli->close();
-
 include '../includes/footer.php';
 ?>

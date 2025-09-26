@@ -1,8 +1,7 @@
 <?php
 session_start();
-
 require_once __DIR__ . '../database/db.php';
-include '../includes/header.php'; 
+include __DIR__ . '../includes/header.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = $_POST["login"];
@@ -23,9 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+
 <section class="flex justify-center items-center min-h-[70vh]">
     <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Connexion</h1>
+
+        <?php if (!empty($error)): ?>
+            <p class="text-red-600 text-center mb-4"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
         <form action="connexion.php" method="post" class="space-y-5">
             <div>
@@ -48,4 +52,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
     </div>
 </section>
-<?php include '../includes/footer.php'; ?>
+
+<?php include __DIR__ . '/includes/footer.php'; ?>
