@@ -1,4 +1,4 @@
-<?php include '../includes/header.php'; ?>
+<?php include __DIR__ . '/../includes/header.php'; ?>
 
 <h1 class="text-3xl font-bold text-center mb-4">Bienvenue sur ModuleConnexion</h1>
 
@@ -13,4 +13,4 @@
   </a>
 </div>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

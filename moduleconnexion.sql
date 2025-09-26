@@ -9,3 +9,7 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
   nom VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL
 );
+
+ALTER TABLE utilisateurs ADD role VARCHAR(20) NOT NULL DEFAULT 'user';
+UPDATE utilisateurs SET role = 'admin' WHERE login = 'admin';
+

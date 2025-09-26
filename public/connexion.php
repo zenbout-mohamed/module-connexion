@@ -1,13 +1,14 @@
 <?php
 session_start();
-require_once __DIR__ . '../database/db.php';
-include __DIR__ . '../includes/header.php';
+require_once __DIR__ . '/../database/db.php';
+include __DIR__ . '/../includes/header.php'; 
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = $_POST["login"];
     $password = $_POST["password"];
 
-    $stmt = $mysqli->prepare("SELECT * FROM utilisateurs WHERE login = ?");
+    $stmt = $mysqli->prepare("SELECT login, role, password FROM utilisateurs WHERE login = ?");
     $stmt->bind_param("s", $login);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -15,14 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['login'] = $user['login'];
-        header("Location: index.php");
+        $_SESSION['role'] = $user['role']; 
+        header("Location: profil.php");
         exit();
     } else {
         $error = "Login ou mot de passe incorrect.";
     }
 }
 ?>
-
 <section class="flex justify-center items-center min-h-[70vh]">
     <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Connexion</h1>
@@ -53,4 +54,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 </section>
 
-<?php include __DIR__ . '/includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

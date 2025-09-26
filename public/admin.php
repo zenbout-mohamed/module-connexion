@@ -1,20 +1,27 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['login']) || $_SESSION['login'] !== "admin") {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: connexion.php");
     exit();
 }
 
-require_once __DIR__ . '../database/db.php';
-include '../includes/header.php';
+require_once __DIR__ . '/../database/db.php';
+include __DIR__ . '/../includes/header.php';
+
 
 $sql = "SELECT id, login, prenom, nom FROM utilisateurs";
 $result = $mysqli->query($sql);
+
+if (!$result) {
+    die("Erreur SQL : " . $mysqli->error);
+}
 ?>
 <section class="flex justify-center items-center min-h-[70vh]">
     <div class="w-full max-w-5xl bg-white p-8 rounded-2xl shadow-lg">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Administration - Liste des utilisateurs</h1>
+        <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">
+            Administration - Liste des utilisateurs
+        </h1>
 
         <div class="overflow-x-auto">
             <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
@@ -42,5 +49,7 @@ $result = $mysqli->query($sql);
 </section>
 <?php
 $result->free();
-include '../includes/footer.php';
+$mysqli->close();
+
+include __DIR__ . '/../includes/footer.php';
 ?>

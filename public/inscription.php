@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '../database/db.php';
-include __DIR__ . '../includes/header.php';
+require_once __DIR__ . '/../database/db.php';
+include __DIR__ . '/../includes/header.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = trim($_POST["login"]);
@@ -85,4 +85,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 </section>
 
-<?php include __DIR__ . '/includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

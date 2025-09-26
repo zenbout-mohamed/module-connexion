@@ -7,10 +7,40 @@ if (!isset($_SESSION['login'])) {
 }
 
 require_once __DIR__ . '/../database/db.php';
-include '../includes/header.php';
+include __DIR__ . '/../includes/header.php'; 
+
+
 
 $login = $_SESSION['login'];
 
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $newLogin  = $_POST['login'];
+    $prenom  = $_POST['prenom'];
+    $nom = $_POST['nom'];
+    $password = $_POST['password'];
+
+    if (!empty($password)) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $sql = "UPDATE utilisateurs SET login = ?, prenom = ?, nom = ?, password = ? WHERE login = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("sssss", $newLogin, $prenom, $nom, $hashedPassword, $login);
+    } else {
+        $sql = "UPDATE utilisateurs SET login = ?, prenom = ?, nom = ? WHERE login = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("ssss", $newLogin, $prenom, $nom, $login);
+    }
+    if ($stmt->execute()) {
+        
+        $_SESSION['login'] = $newLogin;
+        header("Location: profil.php"); 
+        exit();
+    } else {
+        $error = "Erreur lors de la mise à jour.";
+    }
+
+    $stmt->close();
+}
 
 $sql = "SELECT login, prenom, nom FROM utilisateurs WHERE login = ?";
 $stmt = $mysqli->prepare($sql);
@@ -18,37 +48,22 @@ $stmt->bind_param("s", $login);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
+
 $stmt->close();
+$mysqli->close();
 
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $newLogin = $_POST["login"];
-    $prenom = $_POST["prenom"];
-    $nom = $_POST["nom"];
-    $password = $_POST["password"];
-
-    if (!empty($password)) {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $update = $mysqli->prepare("UPDATE utilisateurs SET login=?, prenom=?, nom=?, password=? WHERE login=?");
-        $update->bind_param("sssss", $newLogin, $prenom, $nom, $hashedPassword, $login);
-    } else {
-        $update = $mysqli->prepare("UPDATE utilisateurs SET login=?, prenom=?, nom=? WHERE login=?");
-        $update->bind_param("ssss", $newLogin, $prenom, $nom, $login);
-    }
-
-    $update->execute();
-    $update->close();
-
-    // Mettre à jour la session
-    $_SESSION['login'] = $newLogin;
-
-    header("Location: profil.php");
+if (!$user) {
+    header("Location: connexion.php");
     exit();
 }
 ?>
 <section class="flex justify-center items-center min-h-[70vh]">
     <div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Mon Profil</h1>
+
+        <?php if (isset($error)): ?>
+            <p class="text-red-500 text-center mb-4"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
         <form action="profil.php" method="post" class="space-y-5">
             <div>
@@ -77,4 +92,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
     </div>
 </section>
-<?php include '../includes/footer.php'; ?>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>
