@@ -2,7 +2,7 @@
 session_start();
 
 require_once __DIR__ . '../database/db.php';
- include '../includes/header.php'; 
+include '../includes/header.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = $_POST["login"];
